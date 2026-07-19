@@ -1,15 +1,15 @@
 import { db } from "./firebase-config.js";
 
 import {
-
-doc,
-getDoc
-
+    doc,
+    getDoc
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
 
 window.loginUser = async function () {
+
+    // Get User ID and Password
 
     const userId = document
         .getElementById("userId")
@@ -22,30 +22,34 @@ window.loginUser = async function () {
         .trim();
 
 
+    // Check Empty Fields
+
     if (!userId || !password) {
 
         alert("Please enter User ID and Password.");
 
         return;
+
     }
 
 
     try {
 
-        // Search the users collection
+        // Search users collection
 
         const userRef = doc(db, "users", userId);
 
         const userSnapshot = await getDoc(userRef);
 
 
-        // User Not Found
+        // User Exists?
 
         if (!userSnapshot.exists()) {
 
             alert("Invalid User ID.");
 
             return;
+
         }
 
 
@@ -61,6 +65,7 @@ window.loginUser = async function () {
             alert("Invalid Password.");
 
             return;
+
         }
 
 
@@ -71,6 +76,7 @@ window.loginUser = async function () {
             alert("Your account is inactive.");
 
             return;
+
         }
 
 
@@ -81,24 +87,21 @@ window.loginUser = async function () {
 
         // Redirect Based on Role
 
-        if (role === "student") {
+        if (role === "admin") {
 
-            window.location.href =
-                "student-dashboard.html";
+            window.location.href = "admin-dashboard.html";
 
         }
 
         else if (role === "faculty") {
 
-            window.location.href =
-                "faculty-dashboard.html";
+            window.location.href = "faculty-dashboard.html";
 
         }
 
-        else if (role === "admin") {
+        else if (role === "student") {
 
-            window.location.href =
-                "admin-dashboard.html";
+            window.location.href = "student-dashboard.html";
 
         }
 
@@ -108,13 +111,14 @@ window.loginUser = async function () {
 
         }
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
-        console.error(error);
+        console.error("Login Error :", error);
 
         alert("Something went wrong.");
 
     }
 
-}
+};
